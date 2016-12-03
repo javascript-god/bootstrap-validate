@@ -1,8 +1,6 @@
 
 // TODO: Refactor selector
-function getInputFields(form){
-	return form.querySelectorAll('input:not(.form-check-input)');
-}
+
 
 function getElement (selector, context = document) {
 	return context.querySelector(selector);
@@ -13,16 +11,23 @@ function addEvents (el, evt, handler) {
 }
 		
 function validateForm(selector) {
+	
+	function getTextInputFields(form){
+		var inputs = Array.from(form.querySelectorAll('input'));
+		return inputs.filter(function(input){
+			return textInputTypes.indexOf(input.type) > -1;
+		})
+	}
 
 	function onformSubmit(e) {
 		e.preventDefault();
-		for(var counter = 0, valid = 0; counter < inputFields.length; counter++) {
-			if(inputFields[counter].value.length >= 6) {
+		for(var counter = 0, valid = 0; counter < textInputFields.length; counter++) {
+			if(textInputFields[counter].value.length >= 6) {
 				valid++;
 			}
 		}
 
-		if(valid === inputFields.length) {
+		if(valid === textInputFields.length) {
 			alert('valid!');
 			this.submit();
 		}
@@ -31,9 +36,10 @@ function validateForm(selector) {
 		}
 	}
 
+	var textInputTypes = ['email', 'password', 'text', 'tel', 'url'];
 	var form = getElement(selector);	
-	var inputFields = getInputFields(form);
-	console.log(getElement('#exampleInputPassword1', form));
+	var textInputFields = getTextInputFields(form);
+	console.log(textInputFields);
 	addEvents(form, 'submit', onformSubmit);
 }
 
